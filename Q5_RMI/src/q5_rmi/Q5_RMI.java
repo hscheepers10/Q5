@@ -16,6 +16,7 @@ public class Q5_RMI {
      */
     
     public static void main(String[] args) {
+        Q5_Server serv = new Q5_Server();
         Q5_Client gui = new Q5_Client();
     }
     

@@ -9,6 +9,6 @@ package q5_rmi;
  *
  * @author User
  */
-public class Q5_Server {
+public class Q5_Server implements ConnectInterface{
     
 }
