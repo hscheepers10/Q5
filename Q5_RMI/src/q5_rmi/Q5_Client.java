@@ -3,19 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package q5_rmi;
 
+import com.sun.security.ntlm.Client;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /*
  * @author User
  */
+
 public class Q5_Client extends JFrame {
 
     //Attributes.  
@@ -24,6 +37,14 @@ public class Q5_Client extends JFrame {
     JComboBox degreeCB;
     JButton regBtn;
     private final DefaultListCellRenderer listRenderer;
+    
+    
+    static int dID;
+    static String dName;
+    static String dSurname;
+    static int dAge;
+    static int dPhone;
+    static String dDegree;
 
     //Constructor.  
     public Q5_Client() {
@@ -78,5 +99,44 @@ public class Q5_Client extends JFrame {
         this.add(regBtn);
 
         this.setVisible(true);
+    }
+    //Register class ActionListener.  
+    class reg implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String idTxt = idLbl.getText();
+            dName = fNameLbl.getText();
+            dSurname = sNameLbl.getText();
+            String ageTxt = ageLbl.getText();
+            String cellTxt = cellLbl.getText();
+            dDegree = degreeCB.getSelectedItem().toString();
+            
+            if(idLbl.getText().isEmpty() || fNameLbl.getText().isEmpty() || sNameLbl.getText().isEmpty() || ageLbl.getText().isEmpty() || cellLbl.getText().isEmpty()) {
+            
+                JOptionPane.showMessageDialog(null, "One or more fields are empty","Error",JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                dID = Integer.parseInt(idTxt);
+                dAge = Integer.parseInt(ageTxt);
+                dPhone = Integer.parseInt(cellTxt);
+                Registry r = LocateRegistry.createRegistry(null);
+                ConnectionImplement con = new ConnectionImplement();
+                ConnectInterface conInt = (ConnectInterface) reg.lookup("insert");
+                try{
+                    con.insert(dID, dName, dSurname, dAge, dPhone, dDegree);
+                } catch (Exception ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                JOptionPane.showMessageDialog(null, "Student has been registered sucessfully","Success",JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+    
+    
+    //Main Method that calls GUI.  
+    public static void main(String[] args) throws NotBoundException{
+        
+        Q5_Client cli = new Q5_Client();
     }
 }
